@@ -37,6 +37,12 @@ SAMPLES_PER_CLASS_PROTOTYPE = {
     "test": 75,
 }
 
+BAD_IMAGE_PATHS = {
+
+    # Clearly incorrect/noisy sample found during visual inspection
+    "houzz/chairs/Modern/6836modern-living-room-chairs.jpg"
+}
+
 
 
 def parse_split_file(split_path, split_name, selected_classes=None, exclude_classes=None):
@@ -202,3 +208,51 @@ def remove_duplicate_paths(df):
     df_clean = df.drop_duplicates(subset="relative_path").reset_index(drop=True)
 
     return df_clean
+
+
+
+
+def sample_prototype_subset(df, random_state=RANDOM_STATE):
+    """
+    Sample a balanced prototype subset from the full dataset.
+
+    Sampling is performed separately for each split and each class,
+    preserving the predefined train / validation / test structure.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Full dataset metadata DataFrame.
+    random_state : int, optional
+        Random seed for reproducibility.
+
+    Returns
+    -------
+    pd.DataFrame
+        Balanced subset with predefined number of images per class per split.
+    """
+
+    # Remove known bad/noisy images before sampling
+    if BAD_IMAGE_PATHS:
+        df = df[~df["relative_path"].isin(BAD_IMAGE_PATHS)].copy()
+
+    subsets = []
+
+    for split_name, n_samples in SAMPLES_PER_CLASS_PROTOTYPE.items():
+        df_split = df[df["split"] == split_name]
+
+        for category in SELECTED_CLASSES:
+            df_class = df_split[df_split["category"] == category]
+
+            if len(df_class) < n_samples:
+                raise ValueError(
+                    f"Not enough images for category '{category}' in split '{split_name}'. "
+                    f"Requested {n_samples}, available {len(df_class)}."
+                )
+
+            sampled = df_class.sample(n=n_samples, random_state=random_state)
+            subsets.append(sampled)
+
+    prototype_df = pd.concat(subsets, ignore_index=True)
+
+    return prototype_df.sample(frac=1, random_state=random_state).reset_index(drop=True)

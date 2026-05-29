@@ -217,9 +217,18 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# Data - never push raw images
+# Data - never push raw or generated image datasets
 data/raw/
 data/sketches/
+data/processed/
+
+# Generated metadata files with local paths
+data/splits/*.csv
+
+# Keep folder structure
+!data/splits/.gitkeep
+
+# Archives
 *.7z
 *.zip
 *.rar
