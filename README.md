@@ -103,3 +103,17 @@ Aggarwal, D., Valiyev, E., Sener, F., & Yao, A. (2018).Learning Style Compatibil
   organization={Springer}
 }
 ```
+
+
+## Final Cleanup Checklist
+
+Before submission:
+
+- [ ] Verify all notebooks run locally.
+- [ ] Remove unnecessary debug outputs.
+- [ ] Keep key plots and result tables.
+- [ ] Check that raw data and generated sketches are not tracked.
+- [ ] Confirm `outputs/figures/` contains important project figures.
+- [ ] Update README with final results.
+- [ ] Check GitHub notebook rendering or provide note if preview fails.
+
