@@ -221,6 +221,7 @@ __marimo__/
 data/raw/
 data/sketches/
 data/processed/
+data/features/
 
 # Generated metadata files with local paths
 data/splits/*.csv
